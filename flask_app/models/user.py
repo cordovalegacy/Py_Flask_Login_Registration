@@ -15,13 +15,10 @@ class User:
         self.updated_at = data['updated_at']
 
     @classmethod
-    def get_all(cls):
-        query = "SELECT * FROM users;"
-        results = connectToMySQL('log_reg').query_db(query)
-        users = []
-        for user in results:
-            users.append(cls(user))
-        return users
+    def get_one_user(cls, data):
+        query = "SELECT * FROM login_registration WHERE id=%(id)s"
+        result = connectToMySQL('log_reg').query_db(query, data)
+        return cls(result[0])
 
     @classmethod
     def save_registration(cls, form_data):
