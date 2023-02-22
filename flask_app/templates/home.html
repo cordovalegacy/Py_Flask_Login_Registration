@@ -15,7 +15,7 @@
         class="bg-dark m-auto p-5 w-25 h-100 text-center text-light form-control border border-warning">
         <h2>Registration</h2>
         <hr />
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(category_filter=['Register']) %}
         {% if messages %}
         {% for message in messages %}
         <p>{{message}}</p>
@@ -48,7 +48,7 @@
         class="bg-dark m-auto p-5 w-50 h-100 text-center text-light form-control border border-success">
         <h2>Login</h2>
         <hr />
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(category_filter=['Login']) %}
         {% if messages %}
         {% for message in messages %}
         <p>{{message}}</p>
