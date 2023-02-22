@@ -24,7 +24,7 @@ def register():
 
 @app.route('/login', methods = ['POST'])
 def login():
-    logged_user = User.get_one_user_by_email()
+    logged_user = User.get_one_user_by_email(request.form)
     if not logged_user:
         flash("Invalid Email Address", 'Login')
         return redirect('/')
