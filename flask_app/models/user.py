@@ -31,17 +31,29 @@ class User:
     @staticmethod
     def validate(form_data):
         is_valid = True
+        query = """
+                SELECT * FROM login_registration 
+                WHERE email = %(email)s
+                ;"""
+        results = connectToMySQL('log_reg').query_db(query, form_data)
+        if len(results) >=1:
+            flash("Email is taken, enter a different one", 'Register')
+            is_valid = False
         if len(form_data['first_name']) < 2:
-            flash("First Name must be at least 2 characters")
+            flash("First Name must be at least 2 characters", 'Register')
             is_valid = False
         if len(form_data['last_name']) < 2:
-            flash("Last Name must be at least 2 characters")
+            flash("Last Name must be at least 2 characters", 'Register')
             is_valid = False
-        if len(form_data['email']) < 12:
-            flash("Email Address must be at least 12 characters")
+        if not EMAIL_REGEX.match(form_data['email']):
+            flash("Please register with a valid email address", 'Register')
             is_valid = False
-        if len(form_data['password']) < 2:
-            flash("Password must be at least 2 characters")
+        if len(form_data['password']) < 7:
+            flash("Password must be at least 7 characters", 'Register')
             is_valid = False
+        if form_data['password'] != form_data['confirm']:
+            flash("Passwords must match", 'Register')
+            is_valid = False
+        return is_valid
 
 
