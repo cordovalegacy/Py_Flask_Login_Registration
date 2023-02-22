@@ -1,5 +1,5 @@
 from flask_app import app
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request, session, flash
 from flask_app.models.user import User
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
@@ -22,6 +22,17 @@ def register():
     session['user_id'] = id
     return redirect('/user_page')
 
+@app.route('/login', methods = ['POST'])
+def login():
+    logged_user = User.get_one_user_by_email()
+    if not logged_user:
+        flash("Invalid Email Address", 'Login')
+        return redirect('/')
+    if not bcrypt.check_password_hash(logged_user.password, request.form['password']):
+        return redirect('/')
+    session['user_id'] = logged_user.id
+    return redirect('/user_page')
+
 @app.route('/user_page')
 def user_page():
     if 'user_id' not in session:
@@ -29,7 +40,7 @@ def user_page():
     data = {
         'id': session['user_id']
     }
-    return render_template('user_page.html', user = User.get_one_user(data))
+    return render_template('user_page.html', user = User.get_one_user_by_id(data))
 
 @app.route('/logout')
 def logout():

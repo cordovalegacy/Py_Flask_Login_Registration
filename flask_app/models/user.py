@@ -15,9 +15,18 @@ class User:
         self.updated_at = data['updated_at']
 
     @classmethod
-    def get_one_user(cls, data):
+    def get_one_user_by_id(cls, data):
         query = "SELECT * FROM login_registration WHERE id=%(id)s"
         result = connectToMySQL('log_reg').query_db(query, data)
+        print(result[0])
+        return cls(result[0])
+
+    @classmethod
+    def get_one_user_by_email(cls, data):
+        query = "SELECT * FROM login_registration WHERE email=%(email)s"
+        result = connectToMySQL('log_reg').query_db(query, data)
+        if len(result) < 1:
+            return False
         return cls(result[0])
 
     @classmethod
